@@ -1,6 +1,11 @@
-﻿Release Notes - Open Images Platform - Version OIP 1.2.1
+﻿Release Notes - Open Images Platform - Version OIP 1.2.2
 --------------------------------------------------------
 version $Id$
+
+VERSION 1.2.2
+=============
+
+Version upgrade to fix Maven build.
 
 
 UPGRADING 1.2 -> 1.2.1
