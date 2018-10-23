@@ -5,6 +5,7 @@
     xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
     xmlns:fn="http://java.sun.com/jsp/jstl/functions"
     xmlns:mm="http://www.mmbase.org/mmbase-taglib-2.0"
+    xmlns:oip="urn:jsptagdir:/WEB-INF/tags/oip"
     >
 
   <jsp:output omit-xml-declaration="true" />
@@ -30,7 +31,11 @@
       <mm:import externid="submit_registration" />
       <mm:import externid="confirm" />
       <mm:import externid="eu.openimages.legaltext" from="request" id="legaltext" />
-
+      <mm:import externid="mm_upload_form_to_address" /><!-- sort of SPAM protect -->
+      
+      <!-- captcha -->
+      <mm:import externid="captcha" id="captcha" jspvar="captcha" />
+      <mm:import externid="captchakey" from="session" />
 
       <mm:form styleClass="${empty submit_registration ? 'notsubmitted' : 'submitted'}">
 
@@ -46,6 +51,11 @@
                   <mm:fieldinfo type="input" /><mm:fieldinfo type="errors" />
                 </div>
               </mm:fieldlist>
+              <!-- sort of protection against SPAM bots: field hidden with javascript -->
+              <div class="mm_upload_form_to_address">
+                <label for="mm_upload_form_to_address">To</label>
+                <input type="text" id="mm_upload_form_to_address" name="mm_upload_form_to_address" value="" />
+              </div>
             </fieldset>
             <fieldset class="confirm-registration">
               <div class="legaltext"><mm:write referid="legaltext" escape="none" /></div>
@@ -76,6 +86,13 @@
                 </c:if>
               </div>
             </fieldset>
+            <fieldset class="captcha">
+              <div>
+                <label for="captcha">Please retype the text in this image</label>
+                <oip:captcha />
+                <input type="text" name="captcha" id="captcha" size="12" maxlength="7" autocomplete="off" />
+              </div>
+            </fieldset>
             <fieldset class="buttons">
               <div>
                 <fmt:message key="register.i_accept_create_account" var="register_button" />
@@ -91,6 +108,9 @@
 
         <mm:present referid="submit_registration">
 
+          <c:if test="${captcha ne captchakey}">
+            <c:set var="errortext">The captcha code '${captcha}' you entered was incorrect.</c:set>
+          </c:if>
           <c:if test="${confirm ne 'yes'}">
             <c:set var="errortext"><fmt:message key="register.confirm.error" /></c:set>
           </c:if>
@@ -99,7 +119,7 @@
           </mm:valid>
 
           <c:choose>
-            <c:when test="${empty errortext}">
+            <c:when test="${empty errortext and empty mm_upload_form_to_address}"><!-- and check for empty SPAM address -->
               <mm:valid>
                 <mm:commit />
                 <mm:node cloud="cloud" number="defaultusergroup" id="defaultusergroup" />
@@ -118,9 +138,7 @@
             <c:otherwise>
               <p class="err">${errortext}</p>
               <mm:write referid="buffer" escape="none" />
-              <mm:valid inverse="true">
-                <mm:cancel />
-              </mm:valid>
+              <mm:cancel />
             </c:otherwise>
           </c:choose>
 

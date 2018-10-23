@@ -253,7 +253,7 @@
                                 <div class="blog">
                                   <h3><a href="{link}"><xsl:value-of select="title" /></a></h3>
                                   <p class="date"><xsl:value-of select="oip:reformatDate($rssdate, $format, $newformat)" /></p>
-                                  <p><xsl:value-of select="substring(description, 0, 450)" /></p>
+                                  <p><xsl:value-of select="substring(description, 0, 640)" /></p>
                                   <p><a href="{link}"><fmt:message key="service.readmore" /></a></p>
                                 </div>
                               </xsl:if>

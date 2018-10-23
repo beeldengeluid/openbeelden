@@ -93,12 +93,14 @@
             <dl class="list">
               <dt>
                 <mm:maywrite>
-                  <mm:link absolute="${absolute}" referids="_node@media">
-                    <mm:frameworkparam name="component">oip</mm:frameworkparam>
-                    <mm:frameworkparam name="block">user-media</mm:frameworkparam>
-                    <mm:frameworkparam name="user">${iam}</mm:frameworkparam>
-                    <a href="${portalurl}${_}" title="edit" class="edit"><fmt:message key="media.edit" /></a><jsp:text> </jsp:text>
-                  </mm:link>
+                  <mm:isnotempty referid="iam">
+                    <mm:link absolute="${absolute}" referids="_node@media">
+                      <mm:frameworkparam name="component">oip</mm:frameworkparam>
+                      <mm:frameworkparam name="block">user-media</mm:frameworkparam>
+                      <mm:frameworkparam name="user">${iam}</mm:frameworkparam>
+                      <a href="${portalurl}${_}" title="edit" class="edit"><fmt:message key="media.edit" /></a><jsp:text> </jsp:text>
+                    </mm:link>
+                  </mm:isnotempty>
                 </mm:maywrite>
                 <a title="${mf_title}" href="${portalurl}${_}">
                   <mm:nodefunction name="translation">

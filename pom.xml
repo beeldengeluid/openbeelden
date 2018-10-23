@@ -7,7 +7,7 @@
 
   <groupId>eu.openimages</groupId>
   <artifactId>oip</artifactId>
-  <version>1.2.1</version>
+  <version>1.2-SNAPSHOT</version>
   <packaging>war</packaging>
   <name>Open Images Platform</name>
   <url>http://www.openimages.eu</url>

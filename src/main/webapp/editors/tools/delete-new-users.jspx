@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<jsp:root
+    version="2.0"
+    xmlns:jsp="http://java.sun.com/JSP/Page"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
+    xmlns:mm="http://www.mmbase.org/mmbase-taglib-2.0"
+    xmlns:oip="urn:jsptagdir:/WEB-INF/tags/oip">
+
+  <oip:editor styleClass="download">
+    <jsp:attribute name="head">
+
+    </jsp:attribute>
+    <jsp:attribute name="left">
+      
+
+    </jsp:attribute>
+    <jsp:attribute name="body">
+    
+     <div class="main-column">      
+
+        <mm:import externid="msg" />
+        <mm:import externid="type" />
+
+        <mm:import externid="delete" />
+        <mm:import externid="commit">false</mm:import>
+
+        <mm:import externid="offset">0</mm:import>
+        <mm:import externid="max">100</mm:import>
+
+        <h2>Delete new users</h2>
+        
+        <mm:transaction name="mytrans" commitonclose="$commit">
+        <mm:url id="baseurl" absolute="true" escapeamps="false" referids="delete?" write="false" />
+
+        <mm:listnodescontainer type="mmbaseusers">
+          
+          <!--  <mm:constraint field="status" value="0" operator="EQUAL" /> -->
+          
+          <mm:sortorder field="number" direction="DOWN" />
+          <mm:size id="total" write="false" />
+
+          <mm:offset value="$offset" />
+          <mm:maxnumber value="$max" />
+          
+          <h2>total: <mm:write referid="total" /> ..</h2>
+          <ol>
+          <mm:listnodes>
+            <li>
+              <mm:field name="username" /> - <mm:field name="status" /> - <mm:field name="email" /><br />
+              last: <mm:field name="lastlogon"><mm:time format=":FULL.FULL" /></mm:field><br />
+              valid: <mm:field name="validfrom"><mm:time format=":FULL.FULL" /></mm:field><br />
+              
+              <mm:import id="ow" reset="true"><mm:field name="number" /></mm:import>
+              <mm:listnodescontainer type="mediafragments">
+                <mm:constraint field="owner" value="$ow" operator="EQUAL" />
+                <strong style="color:#090">media: <mm:import id="nr_media" reset="true"><mm:size /></mm:import> ${nr_media}</strong>
+              </mm:listnodescontainer>
+              
+              <c:set var="last" ><mm:field name="lastlogon" /></c:set>
+              <c:set var="from" ><mm:field name="validfrom" /></c:set>
+              <c:set var="diff" value="${last - from}" />
+              <c:set var="stat"><mm:field name="status" /></c:set>
+              last: ${last} from: ${from} diff: ${diff}
+              <c:set var="now"><mm:time time="now" /></c:set>
+
+              
+              <c:if test="${diff lt 0 and stat eq 0 and nr_media lt 1}">
+                <strong style="color:#c00;">DELETE</strong>
+                <mm:maydelete>
+                  <mm:deletenode deleterelations="true" />
+                </mm:maydelete>
+              </c:if>
+              
+              
+              
+              <c:if test="${diff lt 86400 and stat eq 1 and now - from gt 86400 and nr_media lt 1}">
+                <strong style="color:#00c;">1 DAY - NOT IN USE. DELETE?</strong>
+                <mm:maydelete>
+                  <mm:deletenode deleterelations="true" />
+                </mm:maydelete>
+              </c:if>
+            </li>
+          </mm:listnodes>
+          </ol>
+        </mm:listnodescontainer>
+        </mm:transaction>
+        
+      </div><!-- /.main-column -->
+    </jsp:attribute>
+  </oip:editor>
+</jsp:root>

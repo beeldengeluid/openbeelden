@@ -51,6 +51,10 @@
           </mm:relatednodes>
         </mm:relatednodescontainer>
 
+        <!-- captcha -->
+        <mm:import externid="captcha" id="captcha" jspvar="captcha" />
+        <mm:import externid="captchakey" from="session" />
+        
         <!-- email form starts here -->
         <mm:import id="property_to_email">andre@toly.net</mm:import>
         <mm:nodelistfunction nodemanager="properties" name="list" referids="_node@node">
@@ -80,6 +84,13 @@
                 </mm:fieldlist>
               </fieldset>
             </mm:createnode>
+            <fieldset class="captcha">
+              <div>
+                <label for="captcha">Please retype the text in this image</label>
+                <oip:captcha />
+                <input type="text" name="captcha" id="captcha" size="12" maxlength="7" autocomplete="off" /><br />
+              </div>
+            </fieldset>
             <fieldset>
               <div>
                 <input type="submit" name="submit" id="submit" value="Send" class="submit" />
@@ -91,7 +102,17 @@
           </mm:notpresent>
 
           <mm:present referid="submit">
+            
+            <mm:import id="errMsg" reset="true" />
+            <mm:compare referid="captchakey" value="$captcha" inverse="true">
+              <mm:import id="errMsg" reset="true">
+                The captcha code '${captcha}' you entered was incorrect.
+                <a href="javascript:window.history.back();">Go back</a>.
+              </mm:import>
+            </mm:compare> 
+
             <mm:import externid="mm_contactform_to_address" />
+            
             <mm:valid inverse="true">
               <p class="err">Form not valid.</p>
               <mm:cancel />
@@ -100,7 +121,8 @@
             <mm:valid>
               <c:choose>
                 <!-- kind of SPAM protection: check if bot filled hidden field -->
-                <c:when test="${empty mm_contactform_to_address}">
+                <c:when test="${empty mm_contactform_to_address and empty errMsg}">
+                  
                   <mm:commit />
                   <mm:node referid="email">
                     <mm:functioncontainer>
@@ -110,14 +132,25 @@
                       </mm:function>
                     </mm:functioncontainer>
                   </mm:node>
+                  
                 </c:when>
                 <c:otherwise>
-                  <mm:cancel />
-                  <p class="msg stay">Your message has been send.</p>
-                  <!-- but not really -->
+                  
+                  <c:choose>
+                    <c:when test="${!empty errMsg}">
+                      <p class="err"><mm:write referid="errMsg" escape="none" /></p>
+                      <mm:cancel />
+                    </c:when>
+                    <c:otherwise>
+                      <p class="msg stay">Your message has been send.</p><!-- but not really -->
+                      <mm:cancel />
+                    </c:otherwise>
+                  </c:choose>
+                  
                 </c:otherwise>
               </c:choose>
             </mm:valid>
+            
           </mm:present>
         </mm:form>
       </div>

@@ -75,7 +75,9 @@
         name="searchsize"
         write="false"
         referids="index,value,fields?,filter?,analyzer?,extraconstraints" />
-    
+
+<c:set var="cachekey">oai-json.t${type}.s${set}.l${lang}.m${max}.o${offset}</c:set>
+<os:cache key="${cachekey}" time="10">
 {
   "repository" : "Open Image Platform",
   "admin-email" : "info@openimage.eu",
@@ -157,9 +159,11 @@
           </mm:listfunction>
         </mm:functioncontainer>
         ],
-        <c:if test="${fn:startsWith(ntype, 'video')}"><mm:nodefunction name="thumbnail">
-        "thumb" : "<mm:image width="512" height="288" crop="middle" absolute="true" />",
-        </mm:nodefunction></c:if>
+        <c:if test="${fn:startsWith(ntype, 'video')}">
+          <mm:hasfunction name="thumbnail"><mm:nodefunction name="thumbnail">
+            "thumb" : "<mm:image width="512" height="288" crop="middle" absolute="true" />",
+          </mm:nodefunction></mm:hasfunction>
+        </c:if>
         <c:if test="${fn:startsWith(ntype, 'image')}">
           <mm:relatednodes type="imagesources" max="1">
             "thumb" : "<mm:image width="512" height="288" crop="middle" absolute="true" />",
@@ -182,6 +186,7 @@
       }<mm:last inverse="true">,</mm:last>
     </mm:listnodes>
   ]
-}    
+}
+</os:cache>
   </mm:cloud>
 </mm:content>

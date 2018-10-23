@@ -16,18 +16,19 @@
 
       <mm:import id="key">gacode</mm:import>
       <mm:import id="property_gacode"><mm:function referids="_node@node,key@key" nodemanager="properties" name="get" /></mm:import>
-      
+
       <c:if test="${!empty property_gacode}">
-        
-        <script type="text/javascript" src="http://www.google-analytics.com/ga.js"><jsp:text><!-- help ie --></jsp:text></script>
-        <script src="${mm:link('/style/js/analytics.js')}" type="text/javascript"><jsp:text><!-- help ie --></jsp:text></script>
-        <script type="text/javascript">
-          var _gaq = _gaq || [];
-          _gaq.push(['_setAccount', '${property_gacode}']);
-          _gaq.push(['_trackPageview']);
+        <script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', '${property_gacode}', 'auto');
+          ga('send', 'pageview');
         </script>
-        
       </c:if>
+      
     </mm:node>
 
 </jsp:root>

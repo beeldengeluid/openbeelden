@@ -3,22 +3,13 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.mmbase.org/xmlns/createcaches http://www.mmbase.org/xmlns/createcaches.xsd"
     >
-  <!-- minimal config, works on most hosts -->
+  
+  <server max_simultaneous_transcoders="1" stage="recognizer" host="192.168.13.12" port="1679" />
+  <server max_simultaneous_transcoders="3" stage="transcoder" host="192.168.13.12" port="1679" />
   <localhost max_simultaneous_transcoders="1" stage="recognizer"  />
-  <localhost max_simultaneous_transcoders="1" stage="transcoder" />
+  <localhost max_simultaneous_transcoders="0" stage="transcoder" />
 
-  <!-- external server running mmbase commandserver which transfers calls to ffmpeg, ffmpeg2theora etc.
-       a way to configure an dedicated audio and video transcoding server.  -->
-  <!-- <server max_simultaneous_transcoders="2" host="localhost" port="1679" />
-  <server max_simultaneous_transcoders="2" host="192.168.1.13" port="1679" /> -->
-
-  <!-- for testing only, creates and "infite" running transcoder to test cancels, interrupts etc. -->
-  <!-- <transcoder>
-    <class name="org.mmbase.streams.transcoders.InfiniteTranscoder">
-    </class>
-  </transcoder>  -->
-
-  <!-- recognizer: uses ffmpeg -i to recognize uploaded video, audio or image -->
+  <!-- uses ffmpeg -i to recognize uploaded video, audio or image -->
   <recognizer label="source"
               id="recognizer" >
     <class name="org.mmbase.streams.transcoders.FFMpegRecognizer">
@@ -29,7 +20,7 @@
   </recognizer>
 
   <!-- mp4 low -->
-  <transcoder 
+  <transcoder
       label="sd"
       mimetype="video/*" in="recognizer" id="v4">
     <class name="org.mmbase.streams.transcoders.FFMpegTranscoder">
@@ -45,24 +36,30 @@
     </class>
     <loganalyzer name="org.mmbase.streams.transcoders.FFMpegAnalyzer" />
   </transcoder>
-
-  <!-- ogv low -->
-  <transcoder label="sd"
-      mimetype="video/*" in="recognizer" id="v2">
-    <class name="org.mmbase.streams.transcoders.FFMpeg2TheoraTranscoder">
-      <param name="videoQuality">5</param>
-      <param name="height">288</param>
+  
+  <!-- mp4 high -->
+  <transcoder
+      label="hd"
+      mimetype="video/*" in="recognizer" id="v5">
+    <class name="org.mmbase.streams.transcoders.FFMpegTranscoder">
+      <param name="format">mp4</param>
+      <param name="vcodec">libx264</param>
+      <param name="framesPerSecond">25</param>
+      <param name="-b:v">2048k</param>
+      <param name="-c:a">aac</param>
+      <param name="-b:a">196k</param>
+      <param name="audioChannels">2</param>
+      <param name="async">1</param>
     </class>
-    <loganalyzer name="org.mmbase.streams.transcoders.FFMpeg2TheoraAnalyzer" />
+    <loganalyzer name="org.mmbase.streams.transcoders.FFMpegAnalyzer" />
   </transcoder>
-
-  <!-- webm low:
-       config for webm/vp8, can maybe done better with vpre -->
-  <transcoder label="sd" 
-      mimetype="video/*" in="recognizer" id="v8">
+  
+  <!-- webm low
+       config for webm/vp8, can maybe done better with a vpre -->
+  <transcoder label="hd" mimetype="video/*" in="recognizer" id="v8">
     <class name="org.mmbase.streams.transcoders.FFMpegTranscoder">
       <param name="format">webm</param>
-      <param name="-c:v">libvpx</param>
+      <param name="vcodec">libvpx</param>
       <param name="-b:v">1024k</param>
       <param name="-c:a">libvorbis</param>
       <param name="-b:a">128k</param>
@@ -70,11 +67,32 @@
       <param name="-threads">0</param>
       <param name="audioChannels">2</param>
       <param name="async">1</param>
-      <param name="-vf">scale=-1:288</param>
+      <param name="-vf">scale=-1:576</param>
     </class>
     <loganalyzer name="org.mmbase.streams.transcoders.FFMpegAnalyzer" />
   </transcoder>
 
+  <!-- ogv low -->
+  <transcoder
+      label="sd"
+      mimetype="video/*" in="recognizer" id="v12">
+    <class name="org.mmbase.streams.transcoders.FFMpeg2TheoraTranscoder">
+      <param name="videoQuality">5</param>
+      <param name="height">288</param>
+    </class>
+    <loganalyzer name="org.mmbase.streams.transcoders.FFMpeg2TheoraAnalyzer" />
+  </transcoder>
+
+  <!-- ogv high -->
+  <transcoder
+      label="hd"
+      mimetype="video/*" in="recognizer" id="v13">
+    <class name="org.mmbase.streams.transcoders.FFMpeg2TheoraTranscoder">
+      <param name="videoQuality">8</param>
+    </class>
+    <loganalyzer name="org.mmbase.streams.transcoders.FFMpeg2TheoraAnalyzer" />
+  </transcoder>
+  
   <!-- m3u8: create segments with ffmpeg, uses mp4 low (id v4) for input -->
   <transcoder
       label="playlist-sd"
@@ -85,21 +103,17 @@
       <param name="format">m3u8</param>
       <param name="-flags">-global_header</param>
       <param name="-map">0</param>
-      <!-- segment part: 
-        -segment_list is filled by streams application,  
-        -segment_list_entry_prefix is httpPrefix + path made by streams application -->
       <param name="-f">ssegment</param>
       <param name="-segment_time">10</param>
       <param name="-segment_format">mpegts</param>
-      <param name="httpPrefix">http://localhost:8080/files/</param>
+      <param name="httpPrefix">http://www.openbeelden.nl/files/</param>
     </class>
-    <loganalyzer name="org.mmbase.streams.transcoders.FFMpegAnalyzer" />
+    <loganalyzer name="org.mmbase.streams.transcoders.SegmenterAnalyzer" />
   </transcoder>
+  
 
-    
-  <!-- audio ogg: ffmpeg -i audio.wav -acodec libvorbis -aq 32 -ab 192k audio.ogg -->
-  <transcoder label="sd"
-      mimetype="audio/*" id="a1" in="recognizer">
+  <!-- ffmpeg -i audio.wav -acodec libvorbis -aq 32 -ab 192k audio.ogg -->
+  <transcoder mimetype="audio/*" id="a1" in="recognizer" label="sd">
     <class name="org.mmbase.streams.transcoders.FFMpegTranscoder">
       <param name="format">ogg</param>
       <param name="acodec">libvorbis</param>
@@ -109,9 +123,8 @@
     <loganalyzer name="org.mmbase.streams.transcoders.FFMpegAnalyzer" />
   </transcoder>
 
-  <!-- audio mp3: ffmpeg -i audio.wav -acodec libmp3lame -aq 32 -ab 192k audio.mp3 -->
-  <transcoder label="sd"
-      mimetype="audio/*" id="a2" in="recognizer">
+  <!-- ffmpeg -i audio.wav -acodec libmp3lame -aq 32 -ab 192k audio.mp3 -->
+  <transcoder mimetype="audio/*" id="a2" in="recognizer" label="sd">
     <class name="org.mmbase.streams.transcoders.FFMpegTranscoder">
       <param name="format">mp3</param>
       <param name="acodec">libmp3lame</param>
@@ -121,9 +134,8 @@
     <loganalyzer name="org.mmbase.streams.transcoders.FFMpegAnalyzer" />
   </transcoder>
 
-  <!-- audio flac: ffmpeg -i Goo.mp3 -f flac -aq 60 -ab 192k goo.flac -->
-  <transcoder label="sd"
-      mimetype="audio/*" id="a3" in="recognizer">
+  <!-- ffmpeg -i Goo.mp3 -f flac -aq 60 -ab 192k goo.flac -->
+  <transcoder mimetype="audio/*" id="a3" in="recognizer" label="sd">
     <class name="org.mmbase.streams.transcoders.FFMpegTranscoder">
       <param name="format">flac</param>
       <param name="aq">60</param>

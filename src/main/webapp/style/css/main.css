@@ -166,6 +166,12 @@ label
 	padding-top: 2px;
 	cursor: pointer;
 }
+fieldset.captcha label {
+    width: 240px;
+}
+fieldset.captcha input {
+    width: 120px;
+}
 
 /* labels for textareas */
 label.intro,

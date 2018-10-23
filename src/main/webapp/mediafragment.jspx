@@ -58,14 +58,16 @@
         <mm:maywrite><c:set var="maywriteclass" value="maywrite" /></mm:maywrite><!-- for Firefox: whitespace nowrap -->
         <h3 class="mediatitle ${maywriteclass}">
           <mm:nodefunction name="translation"><mm:field name="title" /></mm:nodefunction>
-          <mm:maywrite>
-            <mm:link referids="_node@media">
-              <mm:frameworkparam name="component">oip</mm:frameworkparam>
-              <mm:frameworkparam name="block">user-media</mm:frameworkparam>
-              <mm:frameworkparam name="user">${iam}</mm:frameworkparam>
-              <a class="edit" href="${_}"><fmt:message key="media.edit" /></a>
-            </mm:link>
-          </mm:maywrite>
+          <mm:isnotempty referid="iam">
+            <mm:maywrite>
+              <mm:link referids="_node@media">
+                <mm:frameworkparam name="component">oip</mm:frameworkparam>
+                <mm:frameworkparam name="block">user-media</mm:frameworkparam>
+                <mm:frameworkparam name="user">${iam}</mm:frameworkparam>
+                <a class="edit" href="${_}"><fmt:message key="media.edit" /></a>
+              </mm:link>
+            </mm:maywrite>
+          </mm:isnotempty>
         </h3>
 
         <!--
@@ -105,7 +107,7 @@
                       <li class="order _blank">
                         <fmt:message key="media.order_text" var="mediaordertext" />
                         <a title="${mediaordertext}" 
-                           href="http://beeldengeluid.nl/zakelijk/verkoop-beeld-en-geluidsfragmenten">
+                           href="http://www.beeldengeluid.nl/zoeken-en-bestellen">
                           <fmt:message key="media.order" />
                         </a>
                       </li>
@@ -292,7 +294,7 @@
           <mm:link absolute="true">
             <!-- AddThis Button BEGIN -->
             <div class="addthis_toolbox addthis_default_style ">
-              <a href="http://www.addthis.com/bookmark.php?v=250&amp;username=elfuego"
+              <a href="https://www.addthis.com/bookmark.php?v=250&amp;username=elfuego"
               addthis:url="${_}"
               class="addthis_button_compact">Share</a>
               <span class="addthis_separator">|</span>
@@ -309,7 +311,7 @@
                  }
               };
             </script>
-            <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#username=elfuego"> </script>
+            <script type="text/javascript" src="https://s7.addthis.com/js/250/addthis_widget.js#username=elfuego"> </script>
             <!-- AddThis Button END -->
           </mm:link>
 
