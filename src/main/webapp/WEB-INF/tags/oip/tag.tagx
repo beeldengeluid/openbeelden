@@ -14,6 +14,7 @@
     <fmt:setBundle basename="eu.openimages.messages" scope="request" />
         
     <ul id="tags">
+      <mm:import id="medianr">${_node}</mm:import>
       <mm:listrelationscontainer type="tags" role="related" searchdir="destination">
         <mm:maxnumber value="99" />
         <mm:listrelations id="tagrel" varStatus="status">
@@ -27,7 +28,7 @@
             </mm:relatednode>
             <mm:maydelete><!-- may remove relation with tag, not tag itself -->
               <fmt:message key="tag.remove" var="tag_remove" />
-              <mm:link page="/action/tagsubmit.jspx" referids="tagrel@delete">
+              <mm:link page="/action/tagsubmit.jspx" referids="tagrel@delete,medianr@nr">
                 <a href="${_}" title="${tag_remove}" class="delete">-</a>
               </mm:link>
             </mm:maydelete>

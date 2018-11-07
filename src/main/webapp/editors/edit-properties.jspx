@@ -83,9 +83,9 @@
             <c:otherwise>
               <!-- pulldown with possible keys -->
               <select id="property_key" name="property_key">
-                <c:forEach items="${fn:split(property_keys, ';')}" var="kw">
+                <c:forTokens items="${property_keys}" delims=";" var="kw">
                   <mm:option value="${kw}" compare="${property_key}">${kw}</mm:option>
-                </c:forEach>
+                </c:forTokens>
               </select>
             </c:otherwise>
           </c:choose>
