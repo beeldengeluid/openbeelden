@@ -32,10 +32,10 @@
         <c:if test="${!empty keywords}">
           <c:choose>
             <c:when test="${fn:indexOf(keywords, ';') gt -1}">
-              <c:forEach items="${fn:split(keywords, ';')}" var="kw">
+              <c:forTokens items="${keywords}" delims=";" var="kw">
                 <c:set var="regex">[[:&lt;:]]${fn:trim(kw)}[[:&gt;:]]</c:set>
                 <mm:constraint field="filters.keywords" value="${regex}" operator="REGEXP" />
-              </c:forEach>
+              </c:forTokens>
             </c:when>
             <c:otherwise>
               <c:set var="regex">[[:&lt;:]]${fn:trim(keywords)}[[:&gt;:]]</c:set>
@@ -46,10 +46,10 @@
         <c:if test="${!empty tags}">
           <c:choose>
             <c:when test="${fn:indexOf(tags, ';') gt -1}">
-              <c:forEach items="${fn:split(tags, ';')}" var="tg">
+              <c:forTokens items="${tags}" delims=";" var="tg">
                 <c:set var="regex">[[:&lt;:]]${fn:trim(tg)}[[:&gt;:]]</c:set>
                 <mm:constraint field="filters.tags" value="${regex}" operator="REGEXP" />
-              </c:forEach>
+              </c:forTokens>
             </c:when>
             <c:otherwise>
               <c:set var="regex">[[:&lt;:]]${fn:trim(tags)}[[:&gt;:]]</c:set>
@@ -120,8 +120,8 @@
       </mm:list>
     </mm:listcontainer>
     
-    <c:forEach items="${fn:split(setlist,';')}" var="st">
+    <c:forTokens items="${setlist}" delims=";" var="st">
       <setSpec>${st}</setSpec>
-    </c:forEach>
+    </c:forTokens>
     
   </header>
