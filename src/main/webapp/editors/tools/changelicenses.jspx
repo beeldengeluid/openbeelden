@@ -1,0 +1,144 @@
+<mm:content 
+    xmlns:jsp="http://java.sun.com/JSP/Page"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+    xmlns:mm="http://www.mmbase.org/mmbase-taglib-2.0"
+    xmlns:oip="urn:jsptagdir:/WEB-INF/tags/oip"
+    expires="0" type="text/html">
+<mm:cloud method="http" logon="admin">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="nl">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <title>Media before 1943</title>
+  <style type="text/css">
+  body {
+  	font-family: Helvetica, sans-serif;
+  }
+  </style>
+</head>
+<body>
+
+<pre>
+- User = beeldengeluid
+- Media-items zijn van voor 1943
+- Media-items zijn nu voorzien van een CC-BY-SA licentie
+</pre>
+
+<mm:import externid="max">10</mm:import>
+<mm:import externid="offset">0</mm:import>
+
+<mm:import externid="commit">false</mm:import>
+<mm:url id="pageurl" write="false" absolute="true" escapeamps="false" referids="commit?" />
+
+<mm:transaction commitonclose="${commit}">
+
+<mm:time time="1943/01/01" id="datum" write="false" />
+
+<mm:write referid="datum" ><mm:time format=":FULL" /></mm:write>
+<mm:node number="license_pdm" id="license_pdm" >
+    - <mm:field name="name" />
+</mm:node>
+<mm:node number="user_beeldengeluid" id="beng" >
+    - <mm:field name="username" />
+    <mm:import id="beng_nr"><mm:field name="number" /></mm:import>
+</mm:node>
+
+<ol>
+  <mm:listnodescontainer type="mediafragments">
+    
+    <mm:constraint field="date" value="$datum" operator="LESS_EQUAL" />
+    <mm:constraint field="owner" value="$beng" operator="EQUAL" />
+    
+    <h2>totaal: <mm:size id="total" /></h2>
+    <mm:maxnumber value="${max}" />
+    <mm:offset value="${offset}" />
+    
+    <mm:listnodes id="media">
+      <li>
+        <mm:field name="number" /> : <mm:field name="title" /> 
+        <br /><mm:field name="date"><mm:time format=":FULL" /></mm:field>
+        (owner: <mm:field name="owner" />)
+        
+        <mm:import id="some_id" reset="true"><mm:field name="identifier" /></mm:import>
+        <mm:write referid="some_id" />
+
+        <mm:relatedcontainer path="related,licenses" searchdirs="destination"
+          fields="related.number,licenses.number,licenses.licensekey,licenses.name,licenses.owner">
+          <mm:related>
+            <mm:import id="new_rel_nr" reset="true"><mm:field name="related.number" /></mm:import>
+            <i><mm:field name="licenses.number" /> : <mm:field name="licenses.licensekey" /> - <mm:field name="licenses.name" /></i>
+            
+            <mm:node number="$new_rel_nr">
+              <mm:setfield name="owner"><mm:write referid="beng_nr" /></mm:setfield>
+            </mm:node>
+          
+          </mm:related>
+        </mm:relatedcontainer>
+
+            
+        <mm:relatedcontainer path="related,licenses" searchdirs="destination"
+          fields="related.number,licenses.number,licenses.licensekey,licenses.name">
+          
+          <mm:constraint field="licenses.licensekey" value="CC-BY-SA" operator="EQUAL" />
+          
+          <ol type="a">
+            <mm:related id="lic">
+              <mm:import id="rel_nr" reset="true"><mm:field name="related.number" /></mm:import>
+              <li>
+                <mm:field name="licenses.number" /> : <mm:field name="licenses.licensekey" /> - <mm:field name="licenses.name" />
+                <br />
+                <mm:write referid="rel_nr" />
+                
+                <mm:node number="$rel_nr">
+                  <mm:maydelete>
+                    <mm:deletenode number="$rel_nr" />
+                  </mm:maydelete>
+                </mm:node>
+                
+                <mm:createrelation source="media" destination="license_pdm" role="related" id="newrel">
+                    + relation created
+                </mm:createrelation>
+                
+              </li>
+            </mm:related>
+          </ol>
+        </mm:relatedcontainer>
+        
+        <!-- just to update lastmodified -->
+        <mm:setfield name="identifier"><mm:write referid="some_id" /></mm:setfield>
+        
+      </li>
+    </mm:listnodes>
+  </mm:listnodescontainer>
+
+  <oip:pager total="${total}" max="${max}" offset="${offset}" baseurl="${baseurl}"  />
+
+</ol>
+</mm:transaction>
+
+<mm:node number="18937">
+<mm:relatedcontainer path="mediafragments" searchdirs="source"
+  fields="mediafragments.number,mediafragments.title,licenses.number,licenses.licensekey,licenses.name,licenses.owner">
+  
+  <mm:constraint field="mediafragments.date" value="$datum" operator="LESS_EQUAL" />
+  <mm:constraint field="mediafragments.owner" value="$beng" operator="EQUAL" />
+  <!-- mm:constraint field="licenses.licensekey" value="CC-BY-SA" operator="EQUAL" / -->
+  
+  <h2>totaal: <mm:size /></h2>
+  <mm:maxnumber value="${max}" />
+  <mm:offset value="${offset}" />
+  
+  <mm:related>
+    <li>
+      <mm:field name="mediafragments.number" />
+      <mm:field name="mediafragments.title" /><br />
+      <i><mm:field name="licenses.number" /> : <mm:field name="licenses.licensekey" /> - <mm:field name="licenses.name" /></i>
+    </li>
+  </mm:related>
+</mm:relatedcontainer>
+</mm:node>
+
+</body>
+</html>
+</mm:cloud>
+</mm:content>
