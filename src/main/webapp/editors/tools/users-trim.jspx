@@ -1,0 +1,74 @@
+<mm:content 
+    xmlns:jsp="http://java.sun.com/JSP/Page"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+    xmlns:mm="http://www.mmbase.org/mmbase-taglib-2.0"
+    xmlns:oip="urn:jsptagdir:/WEB-INF/tags/oip"
+    expires="0" type="text/html">
+<mm:cloud loginpage="/editors/login.jspx" rank="site user">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="nl">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <title>Trim users</title>
+  <style type="text/css">
+  body {
+  	font-size: small;
+  	font-family: Helvetica, sans-serif;
+  	margin: 1em 1em 2em 1em;
+  }
+  </style>
+</head>
+<body>
+
+<mm:import externid="max">100</mm:import>
+<mm:import externid="offset">0</mm:import>
+
+<mm:url id="pageurl" write="false" absolute="true" escapeamps="false" />
+
+<p>You are: <mm:cloudinfo type="user" /></p>
+
+<mm:import externid="commit">false</mm:import>
+<mm:transaction commitonclose="${commit}">
+
+  
+  <mm:listnodescontainer type="mmbaseusers">
+    
+    <h3>Total users: <mm:size id="total" /></h3>
+    <mm:sortorder field="number" direction="DOWN" />
+    <mm:maxnumber value="${max}" />
+    <mm:offset value="${offset}" />
+    
+    <ol>
+    <mm:listnodes id="user">
+      <li>
+        [<mm:field name="number" />] <mm:field name="username" /><br />
+        <mm:field name="status" />
+        <mm:import id="aantal" reset="true">0</mm:import>
+        <mm:listnodescontainer type="mediafragments">
+          <mm:constraint field="owner" value="${user}" />
+           ${user} : <strong><mm:import id="aantal" reset="true"><mm:size /></mm:import> 
+           ${aantal} </strong> media
+        </mm:listnodescontainer>
+
+        <mm:field name="status" write="false">
+          <c:if test="${_ eq 0 or aantal lt 1}">
+            <mm:deletenode deleterelations="true" />
+            <strong style="color:#c00">Deleted</strong>
+          </c:if>
+        </mm:field>
+        
+      </li>
+    </mm:listnodes>
+    </ol>
+    
+  </mm:listnodescontainer>
+
+  <oip:pager total="${total}" max="${max}" offset="${offset}" baseurl="${baseurl}"  />
+
+</mm:transaction>
+
+
+</body>
+</html>
+</mm:cloud>
+</mm:content>

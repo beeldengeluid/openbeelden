@@ -22,6 +22,10 @@
     <jsp:attribute name="body">
 
       <mm:import externid="p">${portal.number}</mm:import><!-- we're searching in portal? -->
+      <c:set var="isdefault" value="false" />
+      <mm:node number="$p">
+        <mm:hasalias name="pool_oip"><c:set var="isdefault" value="true" /></mm:hasalias>
+      </mm:node>
 
       <mm:import externid="date" />
       <mm:import externid="uploaded" />
@@ -35,9 +39,9 @@
       <c:if test="${offset lt 0}"><mm:import id="offset" reset="true">0</mm:import></c:if>
 
       <div class="main-column">
-        
+
         <c:choose>
-          <c:when test="${isdefaultportal}">
+          <c:when test="${isdefault}">
             <!-- default search -->
             <c:choose>
               <c:when test="${empty q}">
