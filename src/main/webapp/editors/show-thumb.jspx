@@ -14,7 +14,6 @@
 
 <fmt:setBundle basename="eu.openimages.messages" scope="request" />
 
-<mm:import externid="nr" />
   
   <mm:node number="$nr">
   
