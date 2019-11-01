@@ -29,10 +29,10 @@
   <mm:import externid="cancel" />
   
   <mm:import externid="editme">false</mm:import>
+  <mm:import externid="list">true</mm:import>
   <!-- show form after succesfull submit. default false while inline editing -->
   <mm:import externid="showform">${editme ? 'false' : 'true'}</mm:import>
-  <mm:import externid="list">true</mm:import>
-  <mm:import externid="show">show-node.jspx</mm:import>
+
   <mm:import externid="editor">edit-node.jspx</mm:import>
   <mm:import externid="maydelete">true</mm:import>
   <mm:import externid="unpublish">false</mm:import>
@@ -89,7 +89,6 @@
               <input type="hidden" name="defaultstr" value="${defaultstr}" />
               <input type="hidden" name="editme"    value="${editme}" />
               <input type="hidden" name="editor"    value="${editor}" />
-              <input type="hidden" name="show"      value="${show}" />
               <input type="hidden" name="showform"  value="${showform}" />
               <input type="hidden" name="maydelete" value="${maydelete}" />
               <input type="hidden" name="unpublish" value="${unpublish}" />
@@ -140,9 +139,7 @@
             <div class="node_created edit_${_node} relation_${relation}">
               <jsp:directive.include file="includes/actions.div.jspx" />
               <div class="node">
-                <mm:include page="$show" referids="_node@nr">
-                  <mm:param name="fields">${fields}</mm:param>
-                </mm:include>
+                <jsp:directive.include file="/editors/show-partnerlogo.jspx" />
               </div>
             </div>
           </mm:node>
@@ -161,7 +158,7 @@
         <mm:node number="$nr">
           <jsp:directive.include file="includes/actions.div.jspx" /> 
           <div class="node">
-            <mm:include page="$show" referids="nr" />
+            <jsp:directive.include file="/editors/show-partnerlogo.jspx" />
           </div>
         </mm:node>
       
@@ -202,7 +199,7 @@
     
               <mm:maywrite>
                 <fieldset class="buttons">
-                  <!-- p?,relation?,fields?,lang?,parent?,role?,editme?,showform?,show?,editor?,maydelete?,unpublish?,maycancel?" --> 
+                  <!-- p?,relation?,fields?,lang?,parent?,role?,editme?,showform?,editor?,maydelete?,unpublish?,maycancel?" --> 
                   <input type="hidden" name="relation"  value="${relation}" />
                   <input type="hidden" name="fields"    value="${fields}" />
                   <input type="hidden" name="lang"      value="${lang}" />
@@ -210,7 +207,6 @@
                   <input type="hidden" name="role"      value="${role}" />
                   <input type="hidden" name="editme"    value="${editme}" />
                   <input type="hidden" name="showform"  value="${showform}" />
-                  <input type="hidden" name="show"      value="${show}" />
                   <input type="hidden" name="editor"    value="${editor}" />
                   <input type="hidden" name="maydelete" value="${maydelete}" />
                   <input type="hidden" name="unpublish" value="${unpublish}" />
@@ -232,7 +228,7 @@
                   <jsp:directive.include file="includes/actions.div.jspx" /> 
                   <mm:commit />
                   <div class="node">
-                    <mm:include page="$show" referids="nr,fields?" />
+                    <jsp:directive.include file="/editors/show-partnerlogo.jspx" />
                   </div>
                 </mm:import>
               </mm:valid>

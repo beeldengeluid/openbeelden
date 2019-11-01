@@ -37,7 +37,7 @@
         <mm:node id="therel" />
       </mm:listrelations>
     </mm:listrelationscontainer>
-    <mm:node number="${therel}">
+    <mm:node number="${therel}" notfound="skip">
       <mm:maydelete>
         <c:set var="hash">#relation_${_node}</c:set>
         <mm:link page="delete-relation.jspx" 
