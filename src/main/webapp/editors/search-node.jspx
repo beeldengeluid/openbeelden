@@ -29,7 +29,7 @@
   
   <mm:import externid="showform" />
   <mm:import externid="editme">false</mm:import>
-  <mm:import externid="show">show-node.jspx</mm:import>
+  <mm:import id="show">show-node.jspx</mm:import>
   <mm:import externid="editor">editor.jspx</mm:import><!-- prefer not to inline edit in search  -->
   <mm:import externid="maydelete">true</mm:import>
   <mm:import externid="unpublish">true</mm:import>
@@ -119,7 +119,7 @@
         </div>
 
         <div class="node">
-          <mm:include page="$show" referids="p?,_node@nr,fields?" />
+          <mm:include page="/editors/show-node.jspx" referids="p?,_node@nr,fields?" />
         </div>
         
       </li>

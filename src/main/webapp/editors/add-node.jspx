@@ -56,6 +56,21 @@
     
     <mm:import externid="editme" />
     <mm:import externid="editor">edit-node.jspx</mm:import>
+    <c:choose>
+      <c:when test="${fn:indexOf(editor, 'edit-node.jspx') gt -1}">
+        <mm:import id="editor" reset="true">/editors/edit-node.jspx</mm:import>
+      </c:when>
+      <c:when test="${fn:indexOf(editor, 'edit-partnerlogo.jspx') gt -1}">
+        <mm:import id="editor" reset="true">/editors/edit-partnerlogo.jspx</mm:import>
+      </c:when>
+      <c:when test="${fn:indexOf(editor, 'edit-thumb.jspx') gt -1}">
+        <mm:import id="editor" reset="true">/editors/edit-thumb.jspx</mm:import>
+      </c:when>
+      <c:otherwise>
+        <mm:import id="editor" reset="true">/editors/show-node.jspx</mm:import>
+      </c:otherwise>
+    </c:choose>
+
     <mm:import externid="maydelete">true</mm:import>
     <mm:import externid="unpublish" />
     <mm:import externid="maycancel">true</mm:import>
