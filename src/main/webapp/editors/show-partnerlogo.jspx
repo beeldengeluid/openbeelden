@@ -8,13 +8,11 @@
     language="${empty param.lang ? 'client' : param.lang}" 
     postprocessor="none">
 
-<jsp:output omit-xml-declaration="false" />
+<jsp:output omit-xml-declaration="true" />
 
 <mm:cloud method="asis">
-
-  <mm:import externid="nr" />
   
-  <mm:node number="$nr">
+  <mm:node number="${_node}">
   
     <c:set var="title"><mm:field name="title" /></c:set>
     <div style="float:left; margin-right:8px;">

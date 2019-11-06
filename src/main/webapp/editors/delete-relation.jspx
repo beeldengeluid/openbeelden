@@ -70,7 +70,17 @@
         </mm:node>
         <div class="node">
           <mm:node number="$nr">
-            <mm:include page="$show" referids="p?,nr,fields?,lang?" />
+            <c:choose>
+              <c:when test="${fn:indexOf(show, 'show-node.jspx') gt -1}">
+                <jsp:directive.include file="/editors/show-node.jspx" />
+              </c:when>
+              <c:when test="${fn:indexOf(show, 'show-partnerlogo.jspx') gt -1}">
+                <jsp:directive.include file="/editors/show-partnerlogo.jspx" />
+              </c:when>
+              <c:otherwise>
+                <span>no show</span>
+              </c:otherwise>
+            </c:choose>
           </mm:node>
           <span class="hidden">Canceled!</span>
         </div>
@@ -95,7 +105,17 @@
             <a class="editme cancel" href="#close"><fmt:message key="users.cancel" /></a>
             <mm:node number="$nr">
               <div class="node">
-                <mm:include page="$show" referids="nr,fields?,lang?" />
+                <c:choose>
+                  <c:when test="${fn:indexOf(show, 'show-node.jspx') gt -1}">
+                    <jsp:directive.include file="/editors/show-node.jspx" />
+                  </c:when>
+                  <c:when test="${fn:indexOf(show, 'show-partnerlogo.jspx') gt -1}">
+                    <jsp:directive.include file="/editors/show-partnerlogo.jspx" />
+                  </c:when>
+                  <c:otherwise>
+                    <span>no show</span>
+                  </c:otherwise>
+                </c:choose>              
               </div>
               <p class="msg stay">
                 <fmt:message key="editors.remove_this_type_from_list">

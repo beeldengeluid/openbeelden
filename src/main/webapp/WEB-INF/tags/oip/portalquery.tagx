@@ -49,7 +49,7 @@ translates to: +(someField:bar someField:baz) +anotherField:foo
           <mm:isnotempty>
             <c:choose>
               <c:when test="${fn:indexOf(_, ';') gt -1}">
-                <c:forEach items="${fn:split(_,',')}" var="usr">
+                <c:forTokens items="${_}" delims=";" var="usr">
                   <mm:listnodescontainer type="mmbaseusers">
                     <mm:constraint field="number"   value="${managernr}"    operator="EQUAL" inverse="true" />
                     <mm:constraint field="username" value="${fn:trim(usr)}" operator="EQUAL" />
@@ -58,7 +58,7 @@ translates to: +(someField:bar someField:baz) +anotherField:foo
                       <c:set var="p_users">${p_users}<jsp:text> </jsp:text>powner:"<mm:field name="number" />"</c:set>
                     </mm:listnodes>
                   </mm:listnodescontainer>              
-                </c:forEach>
+                </c:forTokens>
               </c:when>
               <c:otherwise>
                 <mm:listnodescontainer type="mmbaseusers">
@@ -77,9 +77,9 @@ translates to: +(someField:bar someField:baz) +anotherField:foo
           <mm:isnotempty>
             <c:choose>
               <c:when test="${fn:indexOf(_, ';') gt -1}">
-                <c:forEach items="${fn:split(_,';')}" var="kw">
+                <c:forTokens items="${_}" delims=";" var="kw">
                   <c:set var="p_keywords">${p_keywords}<jsp:text> </jsp:text>pkeywords:"<c:out value="${fn:trim(kw)}" />"</c:set>
-                </c:forEach>
+                </c:forTokens>
               </c:when>
               <c:otherwise>
                 <c:set var="p_keywords"><jsp:text> </jsp:text>pkeywords:"<c:out value="${fn:trim(_)}" />"</c:set>
@@ -91,9 +91,9 @@ translates to: +(someField:bar someField:baz) +anotherField:foo
           <mm:isnotempty>
             <c:choose>
               <c:when test="${fn:indexOf(_, ';') gt -1}">
-                <c:forEach items="${fn:split(_, ';')}" var="tag">
+                <c:forTokens items="${_}" delims=";" var="tag">
                   <c:set var="p_tags">${p_tags}<jsp:text> </jsp:text>ptags:"<c:out value="${fn:trim(tag)}" />"</c:set>
-                </c:forEach>
+                </c:forTokens>
               </c:when>
               <c:otherwise>
                 <c:set var="p_tags"><jsp:text> </jsp:text>ptags:"<c:out value="${fn:trim(_)}" />"</c:set>

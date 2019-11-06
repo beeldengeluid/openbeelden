@@ -91,20 +91,25 @@
         </mm:maydelete>
 
         <mm:maydelete>
-          
+          <mm:cloudinfo type="usernode" id="iam" write="false" />
           <mm:import id="dnumber" reset="true"><mm:field name="dnumber" /></mm:import>
           
           <mm:node number="$dnumber">
+            <mm:log level="info">'${iam}' tries to remove tag '<mm:field name="name" />' from ${nr}.</mm:log>
             <mm:nodeinfo type="type">
               
               <c:choose>
-                <c:when test="${_ eq 'tags'}">
-                  <mm:deletenode number="$delete" />
-                  <p class="msg">
-                    <fmt:message key="tag.removed">
-                      <fmt:param><strong><mm:field name="name" /></strong></fmt:param>
-                    </fmt:message>.
-                  </p>
+                <c:when test="${!empty iam  and _ eq 'tags'}">
+                  <mm:hasnode number="$iam">
+                    <mm:deletenode number="$delete" />
+                    <p class="msg">
+                  
+                      <mm:log level="info">Tag removed: '<mm:field name="name" />' from ${nr} by ${iam}.</mm:log>
+                      <fmt:message key="tag.removed">
+                        <fmt:param><strong><mm:field name="name" /></strong></fmt:param>
+                      </fmt:message>.
+                    </p>
+                  </mm:hasnode>
                 </c:when>
                 <c:otherwise>
                   <p class="err"><fmt:message key="tag.notag" /></p>

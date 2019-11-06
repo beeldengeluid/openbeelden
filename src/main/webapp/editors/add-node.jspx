@@ -40,14 +40,41 @@
     <mm:import externid="submit$type" />
     <mm:import externid="cancel" />
 
-    <mm:import externid="editme" />
     <mm:import externid="show">show-node.jspx</mm:import>
+    <c:choose>
+      <c:when test="${fn:indexOf(show, 'show-node.jspx') gt -1}">
+        <mm:import id="show" reset="true">/editors/show-node.jspx</mm:import>
+      </c:when>
+      <c:when test="${fn:indexOf(show, 'show-partnerlogo.jspx') gt -1}">
+        <mm:import id="show" reset="true">/editors/show-partnerlogo.jspx</mm:import>
+      </c:when>
+      <c:otherwise>
+        <mm:import id="show" reset="true">/editors/show-node.jspx</mm:import>
+      </c:otherwise>
+    </c:choose>
     <mm:import externid="showform">${editme ? '' : 'true'}</mm:import><!-- show form (true) again after save (default false) -->
+    
+    <mm:import externid="editme" />
     <mm:import externid="editor">edit-node.jspx</mm:import>
+    <c:choose>
+      <c:when test="${fn:indexOf(editor, 'edit-node.jspx') gt -1}">
+        <mm:import id="editor" reset="true">/editors/edit-node.jspx</mm:import>
+      </c:when>
+      <c:when test="${fn:indexOf(editor, 'edit-partnerlogo.jspx') gt -1}">
+        <mm:import id="editor" reset="true">/editors/edit-partnerlogo.jspx</mm:import>
+      </c:when>
+      <c:when test="${fn:indexOf(editor, 'edit-thumb.jspx') gt -1}">
+        <mm:import id="editor" reset="true">/editors/edit-thumb.jspx</mm:import>
+      </c:when>
+      <c:otherwise>
+        <mm:import id="editor" reset="true">/editors/show-node.jspx</mm:import>
+      </c:otherwise>
+    </c:choose>
+
     <mm:import externid="maydelete">true</mm:import>
     <mm:import externid="unpublish" />
     <mm:import externid="maycancel">true</mm:import>
-
+    
     <c:choose>
       <c:when test="${cancel eq 'Cancel'}">
         
@@ -55,11 +82,19 @@
         <mm:include page="show-node.empty.jspx" referids="p?,nr,show" />
         
         <c:if test="${showform}">
-          <mm:include page="$show" 
-            referids="nr">
-            <mm:param name="cancel">false</mm:param><!-- prevents recursive inclusion of form submitting to itself -->
-            <mm:param name="fields">${fields}</mm:param>
-          </mm:include>
+          <mm:node number="$nr" notfound="skip">
+            <c:choose>
+              <c:when test="${show eq '/editors/show-node.jspx'}">
+                <jsp:directive.include file="/editors/show-node.jspx" />
+              </c:when>
+              <c:when test="${show eq '/editors/show-partnerlogo.jspx'}">
+                <jsp:directive.include file="/editors/show-partnerlogo.jspx" />
+              </c:when>
+              <c:otherwise>
+                <span>no show</span>
+              </c:otherwise>
+            </c:choose>
+          </mm:node>   
         </c:if>
         
       </c:when>
@@ -220,9 +255,17 @@
                 <div class="node_created edit_${_node} relation_${relation}">
                   <jsp:directive.include file="includes/actions.div.jspx" />
                   <div class="node">
-                    <mm:include page="$show" referids="_node@nr">
-                      <mm:param name="fields">${fields}</mm:param>
-                    </mm:include>
+                    <c:choose>
+                      <c:when test="${show eq '/editors/show-node.jspx'}">
+                        <jsp:directive.include file="/editors/show-node.jspx" />
+                      </c:when>
+                      <c:when test="${show eq '/editors/show-partnerlogo.jspx'}">
+                        <jsp:directive.include file="/editors/show-partnerlogo.jspx" />
+                      </c:when>
+                      <c:otherwise>
+                        <span>no show</span>
+                      </c:otherwise>
+                    </c:choose>
                   </div>
                 </div>
               

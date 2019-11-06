@@ -63,7 +63,7 @@
 <mm:listnodescontainer type="$ntype">
   
   <mm:sortorder field="$sf" direction="$so" />
-  <mm:size id="total" write="false" />
+  <h3>Totaal <mm:size id="total" /> ${ntype}</h3>
   <mm:offset value="$offset" />
   <mm:maxnumber value="$max" />
 

@@ -1,0 +1,75 @@
+<mm:content
+    type="application/xml"
+    postprocessor="none"
+    expires="1800"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+    xmlns:jsp="http://java.sun.com/JSP/Page"
+    xmlns:os="http://www.opensymphony.com/oscache"
+    xmlns:mm="http://www.mmbase.org/mmbase-taglib-2.0" >
+
+  <jsp:directive.page session="false" />
+  <mm:cloud>
+
+
+<tags>
+<os:cache time="1800" groups="media" key="page.tags.xml">
+
+<mm:listnodescontainer type="tags">
+  <mm:sortorder field="number" direction="UP" />
+  <mm:listnodes>
+
+    <tag number="${_node}">
+      
+      <name><mm:field name="name" /></name>
+      <owner><mm:field name="owner" /></owner>
+      
+      <!-- total media -->
+      <mm:relatednodescontainer type="mediafragments" role="related" searchdirs="source">
+        <mm:size write="false" id="totalmedia" />
+      </mm:relatednodescontainer>
+
+      <media total="${totalmedia}">
+        <mm:relatednodescontainer type="mediafragments" role="related" searchdirs="source">
+          <mm:relatednodes>
+            <mm:import id="medianumber" reset="true"><mm:field name="number" /></mm:import>
+
+            <!-- total stats -->
+            <mm:listnodescontainer type="stats">
+              <mm:constraint field="node" value="$medianumber" operator="EQUAL" />
+              <mm:size write="false" id="totalstats" />
+            </mm:listnodescontainer>
+
+            <mm:nodeinfo type="nodemanager">
+              <c:choose>
+                <c:when test="${_ eq 'imagefragments'}">
+                  <image number="${_node}">
+                    <title><mm:field name="title" /></title>
+                  </image>
+                </c:when>
+                <c:when test="${_ eq 'audiofragments'}">
+                  <audio number="${_node}">
+                    <title><mm:field name="title" /></title>
+                    <plays>${totalstats}</plays>
+                  </audio>
+                </c:when>
+                <c:otherwise>
+                  <video number="${_node}">
+                    <title><mm:field name="title" /></title>
+                    <plays>${totalstats}</plays>
+                  </video>
+                </c:otherwise>
+              </c:choose>
+            </mm:nodeinfo>
+          </mm:relatednodes>
+        </mm:relatednodescontainer>
+      </media>
+
+    </tag>
+  </mm:listnodes>
+</mm:listnodescontainer>
+</os:cache>
+</tags>
+
+</mm:cloud>
+</mm:content>

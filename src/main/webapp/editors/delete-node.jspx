@@ -23,9 +23,22 @@
 <mm:import externid="parent" />
 <mm:import externid="role" />
 
-<mm:import externid="editme">false</mm:import>
 <mm:import externid="show">show-node.jspx</mm:import>
+<!-- include/show only these jspx files, reset for sure -->
+<c:choose>
+  <c:when test="${fn:indexOf(show, 'show-node.jspx') gt -1}">
+    <mm:import id="show" reset="true">/editors/show-node.jspx</mm:import>
+  </c:when>
+  <c:when test="${fn:indexOf(show, 'show-partnerlogo.jspx') gt -1}">
+    <mm:import id="show" reset="true">/editors/show-partnerlogo.jspx</mm:import>
+  </c:when>
+  <c:otherwise>
+    <mm:import id="show" reset="true">/editors/show-node.jspx</mm:import>
+  </c:otherwise>
+</c:choose>
 <mm:import externid="showform" />
+
+<mm:import externid="editme">false</mm:import>
 <mm:import externid="editor">edit-node.jspx</mm:import>
 <mm:import externid="maydelete">true</mm:import>
 <mm:import externid="unpublish">false</mm:import>
@@ -34,7 +47,8 @@
 <mm:import externid="delete" />
 <mm:import externid="cancel" />
 
-  
+
+
 <mm:hasnode number="$nr" inverse="true">
   <p class="msg">Node not found. Deleted already?</p>
 </mm:hasnode>
@@ -63,7 +77,17 @@
           <div class="log"><jsp:text> <!-- empty --> </jsp:text></div>
           <jsp:directive.include file="includes/actions.div.jspx" />
           <div class="node content">
-            <mm:include page="$show" referids="nr,fields?,lang?" />
+            <c:choose>
+              <c:when test="${show eq '/editors/show-node.jspx'}">
+                <jsp:directive.include file="/editors/show-node.jspx" />
+              </c:when>
+              <c:when test="${show eq '/editors/show-partnerlogo.jspx'}">
+                <jsp:directive.include file="/editors/show-partnerlogo.jspx" />
+              </c:when>
+              <c:otherwise>
+                <span>no show</span>
+              </c:otherwise>
+            </c:choose>
             <!-- <span>Cancelled deleting!</span> -->
           </div>
         </c:when>
@@ -84,7 +108,17 @@
               
               <a class="editme cancel" href="#close"><fmt:message key="users.cancel" /></a>
               <div class="node">
-                <mm:include page="$show" referids="nr,fields?,lang?" />
+                <c:choose>
+                  <c:when test="${show eq '/editors/show-node.jspx'}">
+                    <jsp:directive.include file="/editors/show-node.jspx" />
+                  </c:when>
+                  <c:when test="${show eq '/editors/show-partnerlogo.jspx'}">
+                    <jsp:directive.include file="/editors/show-partnerlogo.jspx" />
+                  </c:when>
+                  <c:otherwise>
+                    <span>no show</span>
+                  </c:otherwise>
+                </c:choose>
               </div>
 
               <p class="msg stay">

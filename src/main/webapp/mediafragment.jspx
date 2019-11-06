@@ -12,10 +12,6 @@
       >
 
     <jsp:attribute name="head">
-      <script src="${mm:link('/mmbase/jquery/jquery.form.js')}" type="text/javascript"><jsp:text><!-- help ie --></jsp:text></script>
-      <script src="${mm:link('/style/js/typewatch.js')}" type="text/javascript"><jsp:text><!-- help ie --></jsp:text></script>
-      <script src="${mm:link('/style/js/mmtag.js')}" type="text/javascript"><jsp:text><!-- help ie --></jsp:text></script>
-
       <mm:nodeinfo type="nodemanager" id="nmtype" write="false" />
       <c:choose>
         <c:when test="${nmtype eq 'imagefragments'}">
@@ -24,9 +20,9 @@
         </c:when>
         <c:otherwise>
           <!-- oiplayer stuff -->
-          <link href="${mm:link('/oiplayer/css/oiplayer.css')}" rel="stylesheet" type="text/css" />
+          <link href="${mm:link('/oiplayer/css/oiplayer.min.css')}" rel="stylesheet" type="text/css" />
           <script src="${mm:link('/oiplayer/plugins/flowplayer-3.2.6.min.js')}" type="text/javascript"><jsp:text><!-- help ie --></jsp:text></script>
-          <script src="${mm:link('/oiplayer/js/jquery.oiplayer.js')}" type="text/javascript"><jsp:text><!-- help ie --></jsp:text></script>
+          <script src="${mm:link('/oiplayer/js/jquery.oiplayer.min.js')}" type="text/javascript"><jsp:text><!-- help ie --></jsp:text></script>
         </c:otherwise>
       </c:choose>
 
@@ -34,6 +30,9 @@
         <mm:param name="related"><mm:field name="number" /></mm:param>
         <link href="${_}" rel="alternate" type="application/atom+xml" title="Open Image Platform related items of ${_node.title}" />
       </mm:link>
+      <script src="${mm:link('/mmbase/jquery/jquery.form.js')}" type="text/javascript"><jsp:text><!-- help ie --></jsp:text></script>
+      <script src="${mm:link('/style/js/typewatch.js')}" type="text/javascript"><jsp:text><!-- help ie --></jsp:text></script>
+      <script src="${mm:link('/style/js/mmtag.js')}" type="text/javascript"><jsp:text><!-- help ie --></jsp:text></script>
     </jsp:attribute>
 
     <jsp:attribute name="body">

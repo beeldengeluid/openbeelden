@@ -91,7 +91,17 @@
           <li id="${empty relationid ? nodeid : relationid}" class="${relationid} ${nodeid} ">
             <jsp:directive.include file="includes/actions.div.jspx" />
             <div class="node">
-              <mm:include page="$show" referids="p?,_node@nr,fields?" />
+              <c:choose>
+                <c:when test="${fn:indexOf(show, 'show-node.jspx') gt -1}">
+                  <jsp:directive.include file="/editors/show-node.jspx" />
+                </c:when>
+                <c:when test="${fn:indexOf(show, 'show-partnerlogo.jspx') gt -1}">
+                  <jsp:directive.include file="/editors/show-partnerlogo.jspx" />
+                </c:when>
+                <c:otherwise>
+                  <span>no show</span>
+                </c:otherwise>
+              </c:choose>              
             </div>
           </li>
         </mm:relatednodes>
