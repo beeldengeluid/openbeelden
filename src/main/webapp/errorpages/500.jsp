@@ -110,36 +110,18 @@ if (status == 500) {
   <mm:import id="title">MMBase - Error <%= status %></mm:import>
   <title><mm:write referid="title" /> - Open Images</title>
   <%@ include file="meta.jsp" %>
-  <script type="text/javascript" language="javascript">
-    function show() {
-    document.getElementById('error').style.display = 'block';
-    document.getElementById('show').style.display = 'none';
-}
-    function hide() {
-    document.getElementById('error').style.display = 'none';
-    document.getElementById('show').style.display = 'block';
-}
-  </script>
 </head>
 <body class="error">
   <%@ include file="header.jsp" %>
   <div class="main-column">
     <h2><mm:write referid="title" /></h2>
-    <h3><%= title != null ? title : "NO EXCEPTION" %></h3>
+
     <h3>Error ticket: <%= ticket %></h3>
     <% String referrer = request.getHeader("Referer");
        if (referrer != null) {
     %>
       <p><a href="<%= org.mmbase.util.transformers.Xml.XMLAttributeEscape(referrer) %>">back</a></p>
     <% } %>
-    <div id="show">   
-      <a href="javascript:show();">Show error</a>
-    </div>
-    <div id="error" style="display: none;" class="err">
-      <a href="javascript:hide();">Hide error</a>
-      <mm:import id="msg"> <%=msg.toString()%></mm:import>
-      <mm:write referid="msg" escape="p" />
-    </div>
     <p>Please contact your system administrator about this.</p>
   </div>
   <%@ include file="footer.jsp" %>

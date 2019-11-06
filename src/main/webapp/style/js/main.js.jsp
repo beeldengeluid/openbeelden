@@ -75,12 +75,6 @@ function clearMsg(el) {
 
 /* Toolbar on media item page */
 function initToolbar() {
-    if ($("div.popup").length) {
-        var loc = document.location.href;
-        if (loc.indexOf('#license') < 0) {
-            $(loc.substring(loc.indexOf('#'))).toggle();
-        }
-    }
     $('li.license a, li.download a, li.share a').click(function(ev) {
         ev.preventDefault();
         var link = ev.target.href;          // includes #bla when clicked
@@ -204,11 +198,14 @@ function initTags() {
     });
 
     // ajax form options
-    var options = {
-        target: '#tagfeedback',
-        success: addedTag
-    };
-    $('#tagform').ajaxForm(options);
+    var $tagform = $('#tagform');
+    if ($tagform.length) {
+        var options = {
+            target: '#tagfeedback',
+            success: addedTag
+        };
+        $('#tagform').ajaxForm(options);
+    }
 }
 
 function addedTag() {

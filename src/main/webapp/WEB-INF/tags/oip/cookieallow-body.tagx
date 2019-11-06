@@ -5,18 +5,12 @@
     xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
     xmlns:mm="http://www.mmbase.org/mmbase-taglib-2.0"
     version="2.0">
-    
-  
-  <!-- include in top of html body -->
-  <c:if test="${empty allowcookies}">
-    <mm:import id="allowcookies" externid="eu.openimages.cookieallow" from="cookie" />
-    <!-- check if cookies are enabled -->
-    <mm:import id="testcookiecontent">test</mm:import>
-    <mm:write cookie="testcookie" referid="testcookiecontent" />
-    <mm:import id="testcookie" externid="testcookie" from="cookie" />
-  </c:if>
 
-  <c:if test="${empty allowcookies and !empty testcookie}">
+
+  <!-- check if cookies are enabled: include in top of html body -->
+  <mm:import id="allowcookies" externid="eu.openimages.cookieallow" from="cookie" />
+
+  <c:if test="${empty allowcookies}">
     <div id="cookie-bar">
       <p>
         <mm:link page="/cookies" id="cookiepage" write="false" />
@@ -26,8 +20,6 @@
       </p>
       <div class="cookie-buttons">
         <a class="cookies-textread"><fmt:message key="users.close" /></a>
-        <!-- <button class="allow-cookies"><fmt:message key="cookie.allow-cookies" /></button>
-        <button class="disallow-cookies"><fmt:message key="cookie.disallow-cookies" /></button> -->
       </div>
     </div>
   </c:if>

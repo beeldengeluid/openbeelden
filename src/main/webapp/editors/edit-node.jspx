@@ -29,8 +29,20 @@
   <mm:import externid="editme">false</mm:import>
   <!-- show form after succesfull submit. default false while inline editing -->
   <mm:import externid="showform">${editme ? 'false' : 'true'}</mm:import>
-  <mm:import externid="list">true</mm:import>
   <mm:import externid="show">show-node.jspx</mm:import>
+  <c:choose>
+    <c:when test="${fn:indexOf(show, 'show-node.jspx') gt -1}">
+      <mm:import id="show" reset="true">/editors/show-node.jspx</mm:import>
+    </c:when>
+    <c:when test="${fn:indexOf(show, 'show-partnerlogo.jspx') gt -1}">
+      <mm:import id="show" reset="true">/editors/show-partnerlogo.jspx</mm:import>
+    </c:when>
+    <c:otherwise>
+      <mm:import id="show" reset="true">/editors/show-node.jspx</mm:import>
+    </c:otherwise>
+  </c:choose>
+  
+  <mm:import externid="list">true</mm:import>
   <mm:import externid="editor">edit-node.jspx</mm:import>
   <mm:import externid="maydelete">true</mm:import>
   <mm:import externid="unpublish">false</mm:import>
@@ -45,14 +57,22 @@
 
     <c:choose>
       <c:when test="${cancel eq 'Cancel'}">
-        
         <mm:node number="$nr">
           <jsp:directive.include file="includes/actions.div.jspx" />
+          <div class="node">          
+            <c:choose>
+              <c:when test="${show eq '/editors/show-node.jspx'}">
+                <jsp:directive.include file="/editors/show-node.jspx" />
+              </c:when>
+              <c:when test="${show eq '/editors/show-partnerlogo.jspx'}">
+                <jsp:directive.include file="/editors/show-partnerlogo.jspx" />
+              </c:when>
+              <c:otherwise>
+                <span>no show</span>
+              </c:otherwise>
+            </c:choose>
+          </div>
         </mm:node>
-        <div class="node">
-          <mm:include page="$show" referids="nr,fields?" />
-        </div>
-        
       </c:when>
       <c:otherwise>
         
@@ -128,7 +148,17 @@
                       <jsp:directive.include file="includes/actions.div.jspx" />
                       <mm:commit />
                       <div class="node">
-                        <mm:include page="$show" referids="nr,fields?" />
+                        <c:choose>
+                          <c:when test="${show eq '/editors/show-node.jspx'}">
+                            <jsp:directive.include file="/editors/show-node.jspx" />
+                          </c:when>
+                          <c:when test="${show eq '/editors/show-partnerlogo.jspx'}">
+                            <jsp:directive.include file="/editors/show-partnerlogo.jspx" />
+                          </c:when>
+                          <c:otherwise>
+                            <span>no show</span>
+                          </c:otherwise>
+                        </c:choose>
                       </div>
                     </mm:import>
                   </c:otherwise>

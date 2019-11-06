@@ -27,7 +27,6 @@
   <mm:import externid="cancel" />
 
   <mm:import externid="editme">false</mm:import>
-  <mm:import externid="show">/editors/show-thumb.jspx</mm:import>
   <mm:import externid="showform" />
   <mm:import externid="editor">/editors/edit-thumb.jspx</mm:import>
   <mm:import externid="maydelete">true</mm:import>
@@ -45,9 +44,7 @@
         <mm:node number="$nr">
           
           <span class="content">
-            <mm:include page="$show" referids="nr">
-              <mm:param name="fields">${fields}</mm:param>
-            </mm:include>
+            <jsp:directive.include file="/editors/show-thumb.jspx" />
           </span>
     
           <span class="links">
@@ -130,9 +127,7 @@
                     <mm:import id="saved">
                       <p class="msg">Your changes are saved.</p>
                       <span class="content">
-                        <mm:include page="$show" referids="p?,nr">
-                          <mm:param name="fields">${fields}</mm:param>
-                        </mm:include>
+                        <jsp:directive.include file="/editors/show-thumb.jspx" />
                       </span>
   
                       <span class="links">

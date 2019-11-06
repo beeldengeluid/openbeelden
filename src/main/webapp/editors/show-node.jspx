@@ -9,26 +9,13 @@
     language="${empty param.lang ? 'client' : param.lang}" 
     postprocessor="none">
 
-<jsp:output omit-xml-declaration="false" />
+<jsp:output omit-xml-declaration="true" />
 
 <mm:cloud method="asis">
 
   <fmt:setBundle basename="eu.openimages.messages" scope="request" />
-  
-  <mm:import externid="nr" />
-  <mm:import externid="fields"  />
 
-
-  <mm:escaper type="tagstripper" id="stripper">
-    <mm:param name="escapeamps" value="false" />
-  </mm:escaper>
-  <mm:escaper id="wrapper" type="substring">
-    <mm:param name="from" value="0" />
-    <mm:param name="to" value="48" />
-    <mm:param name="ellipsis" value="..." />
-  </mm:escaper>
-
-  <mm:node number="$nr">
+  <mm:node number="${_node}">
     <mm:nodeinfo type="type">
       <c:choose>
         
@@ -180,6 +167,6 @@
   
     </mm:nodeinfo>
   </mm:node>
-
+  
 </mm:cloud>
 </mm:content>

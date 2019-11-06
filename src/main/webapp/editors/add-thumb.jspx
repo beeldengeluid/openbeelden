@@ -40,7 +40,6 @@
     <mm:import externid="cancel" />
 
     <mm:import externid="editme">false</mm:import>
-    <mm:import externid="show">show-thumb.jspx</mm:import>
     <mm:import externid="showform">${editme ? '' : 'true'}</mm:import><!-- show form (true) again after save (default false) -->
     <mm:import externid="editor">edit-thumb.jspx</mm:import>
     <mm:import externid="maydelete">true</mm:import>
@@ -50,7 +49,8 @@
     <c:choose>
       <c:when test="${cancel eq 'Cancel'}">
         
-        <mm:include page="$show" referids="nr,fields?" />
+        <jsp:directive.include file="/editors/show-thumb.jspx" />
+        
         <mm:node number="$nr">
           <mm:link page="add-thumb.jspx" 
             referids="p?,_node@nr,role,dir,pos?,type,show,editor,fields,defaultstr,maydelete,unpublish">
@@ -183,9 +183,7 @@
             <div class="node_created node_${new_node} relation_${relation}">
               
               <span class="content">
-                <mm:include page="$show" referids="new_node@nr">
-                  <mm:param name="fields">${fields}</mm:param>
-                </mm:include>
+                <jsp:directive.include file="/editors/show-thumb.jspx" />
               </span>
               
               <span class="links">
