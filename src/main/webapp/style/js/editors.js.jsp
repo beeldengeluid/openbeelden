@@ -33,110 +33,64 @@ $(document).ready(function() {
     }
 });
 
-var tinyMceConfig = {
-    theme: "advanced",
-    mode : "specific_textareas",
-    gecko_spellcheck : true,
-    //editor_selector : /(mm_f_intro|mm_f_body)/,
-    extended_valid_elements : ""
-    + "video[src|poster|preload|autoplay|loop|controls|width|height],"
-    + "audio[src|preload|autoplay|loop|controls],"
-    + "source[src|type|media],"
-    + "embed[src|width|height|quality|pluginspace|type,"
-    + "object[archive|border|class|classid"
-    + "|codebase|codetype|data|declare|dir<ltr?rtl|height|id|lang|name"
-    + "|onclick|ondblclick|onkeydown|onkeypress|onkeyup|onmousedown|onmousemove"
-    + "|onmouseout|onmouseover|onmouseup|standby|tabindex|title|type|usemap"
-    + "|width],"
-    + "param[id|name|type|value|valuetype<DATA?OBJECT?REF]",
-    plugins : "fullscreen,xhtmlxtras",
-    content_css : "${mm:link('/style/css/tiny_mce.css')}",
-    entity_encoding : "raw",
-    <c:if test="${!empty requestScope['javax.servlet.jsp.jstl.fmt.locale.request']}">
-      language : "${requestScope['javax.servlet.jsp.jstl.fmt.locale.request']}",
-    </c:if>
-    setup : function(ed) { 
-        
-        var followTiny = null;
-        var saveTiny = function(ed) {
-            ed.save();
-            $("#" + ed.id).trigger("paste"); // triggers mmbase
-        }
-        
-        ed.onInit.add(function(ed) {  
-            if ($.browser.msie) {   // MSIE only
-                saveTiny(ed);
-            }
-        });
-        /* onChange: Fires when a new undo level is added to the editor */
-        //ed.onChange.add(function(ed) {    
-        /* onActivate: when textarea gets focus (and at init of tinyMCE) */
-        ed.onActivate.add(function(ed) {
-            clearInterval(followTiny);
-            var count = 0;
-            followTiny = setInterval(function(){
-                if (ed.isDirty()) { // || ed.getContent() == 0
-                    saveTiny(ed);
-                } else {    /* editors get activated at init then deactivated, make them stop following */
-                    saveTiny(ed);
-                    clearInterval(followTiny);
-                }
-                if (count > 999) {  /* seems reasonable to stop after some time to avoid some browsers from crashing */
-                     clearInterval(followTiny);
-                }
-                count++;
-            }, 1500);   /* 1.5 sec interval needed (?) to give other threads (mmbase validator) time to check */
-        });
-        ed.onDeactivate.add(function(ed) {  // check if we need to validate
-            if (ed.isDirty() || ed.getContent() == 0) {
-                saveTiny(ed);
-            }
-        });
-        ed.onRemove.add(function(ed) {
-            if (followTiny != null) clearInterval(followTiny);
-        });
-    },
-    
-    theme_advanced_toolbar_align : "left",
-    theme_advanced_blockformats : "p,h3,h4,h5,blockquote",
-    theme_advanced_path_location : "bottom",
-    theme_advanced_toolbar_location : "top",
-  
-    theme_advanced_buttons1 : "formatselect,bold,italic,|,bullist,numlist,|,link,unlink,|,removeformat,code,fullscreen",
-    theme_advanced_buttons2 : "",
-    theme_advanced_buttons3 : "",
-    theme_advanced_resizing : true
-}
-
 /*
  * Inits tinyMCE html editor on dynamically loaded forms
  */
 function initTiny(el) {
+    /* have tinyMCE and MMBaseValidator cooperate */
+    var saveForMMBaseValidator = function(editor) {
+        editor.save();
+        $("#" + editor.id).trigger("paste");
+    };
+    
     $(el).find("${textarea_classes}").each(function() {
-        $(this).tinymce(tinyMceConfig);
-    });
-    initMMBasevalidatorForTiny(el);
-}
-
-/* Trigger events on original textareas to have tinyMCE and MMBaseValidator cooperate */
-function initMMBasevalidatorForTiny(el) {
-    $("body").mousedown(function(ev) {
-        for (edId in tinyMCE.editors) {
-            var ed = tinyMCE.editors[edId];
-            if (ed.isDirty() && ed.id == tinyMCE.activeEditor.id) {
-                ed.save();
-                $("#" + edId).trigger("paste");
+        $(this).tinymce({
+            script_url: '${mm:link('/mmbase/tinymce/tinymce.min.js')}',
+            content_css: '${mm:link('/style/css/tiny_mce.css')}',
+            <c:if test="${!empty requestScope['javax.servlet.jsp.jstl.fmt.locale.request']}">
+              language: "${requestScope['javax.servlet.jsp.jstl.fmt.locale.request']}",
+            </c:if>
+            plugins: 'code',
+            mode: 'specific_textareas',
+            gecko_spellcheck: true,
+            branding: false,
+            menubar: false,
+            toolbar: 'undo redo | styleselect | bold italic | link | code',
+            quickbars_selection_toolbar: 'bold italic | quicklink h2 h3 blockquote',
+            block_formats: 'Paragraph=p; Header 1=h1; Header 2=h2; Header 3=h3',
+            style_formats: [
+                { title: 'Headings', items: [
+                  { title: 'Heading 1', format: 'h1' },
+                  { title: 'Heading 2', format: 'h2' },
+                  { title: 'Heading 3', format: 'h3' },
+                  { title: 'Heading 4', format: 'h4' },
+                  { title: 'Heading 5', format: 'h5' },
+                  { title: 'Heading 6', format: 'h6' }
+                ]},
+                { title: 'Inline', items: [
+                  { title: 'Bold', format: 'bold' },
+                  { title: 'Italic', format: 'italic' },
+                  { title: 'Underline', format: 'underline' },
+                  { title: 'Strikethrough', format: 'strikethrough' },
+                  { title: 'Superscript', format: 'superscript' },
+                  { title: 'Subscript', format: 'subscript' },
+                  { title: 'Code', format: 'code' }
+                ]},
+                { title: 'Blocks', items: [
+                  { title: 'Paragraph', format: 'p' },
+                  { title: 'Blockquote', format: 'blockquote' },
+                  { title: 'Pre', format: 'pre' }
+                ]}
+            ],            
+            setup: function(editor) {
+                editor.on('blur', function(e) {
+                    saveForMMBaseValidator(editor);
+                });
+            },
+            init_instance_callback: function(editor) {
+                saveForMMBaseValidator(editor);
             }
-        }
-    });
-    $(el).find('input').focus(function(ev){
-        for (edId in tinyMCE.editors) {
-            var ed = tinyMCE.editors[edId];
-            if (ed.isDirty() && ed.id == tinyMCE.activeEditor.id) {
-                ed.save();
-                $("#" + edId).trigger("paste");
-            }
-        }
+        });
     });
 }
 

@@ -85,8 +85,8 @@
           <jsp:include page="/mmbase/jquery/jquery-ui.jspx" />
           <jsp:directive.include file="/mmbase/validation/javascript.jspxf" />
           
-          <script src="${mm:link('/style/js/jquery.tinymce.js')}" type="text/javascript"><jsp:text> </jsp:text></script>
-          <script src="${mm:link('/mmbase/tiny_mce/tiny_mce.js')}" type="text/javascript"><jsp:text> </jsp:text></script>
+          <script src="${mm:link('/mmbase/tinymce/tinymce.min.js')}" type="text/javascript"><jsp:text> </jsp:text></script>
+          <script src="${mm:link('/mmbase/tinymce/jquery.tinymce.min.js')}" type="text/javascript"><jsp:text> </jsp:text></script>
           
           <script src="${mm:link('/mmbase/jquery/jquery.form.js')}" type="text/javascript"><jsp:text> </jsp:text></script>
           <script src="${mm:link('/style/js/editors.js.jsp')}" type="text/javascript"><jsp:text> </jsp:text></script>

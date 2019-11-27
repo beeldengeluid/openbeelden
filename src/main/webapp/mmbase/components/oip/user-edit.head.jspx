@@ -10,8 +10,8 @@
   <jsp:output omit-xml-declaration="true" />
     <mm:cloud method="asis">
 
-      <script src="${mm:link('/mmbase/tiny_mce/tiny_mce.js')}" type="text/javascript"><jsp:text><!-- help ie --></jsp:text></script>
-      <script src="${mm:link('/style/js/jquery.tinymce.js')}" type="text/javascript"><jsp:text><!-- help ie --></jsp:text></script>
+      <script src="${mm:link('/mmbase/tinymce/tinymce.min.js')}" type="text/javascript"><jsp:text><!-- help ie --></jsp:text></script>
+      <script src="${mm:link('/mmbase/tinymce/jquery.tinymce.min.js')}" type="text/javascript"><jsp:text><!-- help ie --></jsp:text></script>
         
       <script type="text/javascript">
         /* this is in user-edit.head.jspx */

@@ -1,5 +1,5 @@
 ﻿/*
-  Javascript detecting cookie warning etc., depends on jQuery.
+  Javascript detecting cookie warning etc.
   @author:  Andre van Toly
   @version: '$Id$'
 */
