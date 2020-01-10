@@ -38,7 +38,7 @@
     <param-name>mmbase.servlet.images.addfilename</param-name>
     <param-value>yes</param-value>
   </context-param>
-  <!-- some for attachments -->
+  <!-- same for attachments -->
   <context-param>
     <param-name>mmbase.servlet.attachments.addfilename</param-name>
     <param-value>yes</param-value>
