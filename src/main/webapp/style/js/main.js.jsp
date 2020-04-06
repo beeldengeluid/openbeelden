@@ -220,10 +220,11 @@ function addedTag() {
 
 /* Tabs video, audio etc. */
 function initTabs(id) {
-    if ($('#' + id).length) {
-        var $tabs = $('#' + id).tabs();   /* jquery-ui.js must be included */
+    var $tabsEl = $('#' + id);
+    if ($tabsEl.length) {
+        var $tabs = $tabsEl.tabs();   /* jquery-ui.js must be included */
         var loc = document.location.href;
-        var tabs_length = $('#' + id).tabs("length");
+        var tabs_length = $('#' + id).tabs.length;
         var anchorIndex = loc.indexOf('#');
         if (anchorIndex > 0) {
             var anchor = loc.substring(anchorIndex);

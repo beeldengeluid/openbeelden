@@ -21,8 +21,9 @@
     <jsp:attribute name="left"><oip:search advanced="true" /></jsp:attribute>
     <jsp:attribute name="body">
 
-      <mm:import id="p">${portal.number}</mm:import><!-- we're searching in portal? -->
+      <mm:import externid="p">${portal.number}</mm:import><!-- we're searching in portal? -->
       <c:set var="isdefault" value="false" />
+
       <mm:hasnode number="$p">
         <mm:node number="$p" notfound="log">
           <mm:hasalias name="pool_oip"><c:set var="isdefault" value="true" /></mm:hasalias>
