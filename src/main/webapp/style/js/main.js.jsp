@@ -221,62 +221,35 @@ function addedTag() {
 /* Tabs video, audio etc. */
 function initTabs(id) {
     var $tabsEl = $('#' + id);
+    var tabIds = [];
+    $tabsEl.find('div').each(function(i, el) {
+        tabIds[i] = el.id;
+    });
     if ($tabsEl.length) {
-        var $tabs = $tabsEl.tabs();   /* jquery-ui.js must be included */
-        var loc = document.location.href;
-        var tabs_length = $('#' + id).tabs.length;
-        var anchorIndex = loc.indexOf('#');
-        if (anchorIndex > 0) {
-            var anchor = loc.substring(anchorIndex);
-            if (anchor.indexOf("#t_") == 0) {
-                $('#' + id).tabs('select', '#' + anchor.substring(3));
-            } else {
-                $('#' + id).tabs('select', '#t_' + anchor.substring(1));
+        $tabsEl.tabs({
+            'tabsload': function(ev, ui) {
+                $tabsEl.tabs('select', window.location.hash);
+            },
+            'activate': function(ev, ui) {
+                var selectedIndex = ui.newTab.index();
+                history.pushState(null, null, "#" + tabIds[selectedIndex]);
             }
-        }
-
-        $('#' + id).bind('tabsshow', function(event, ui) {
-                var a = ui.tab.href;
-                a = a.substring(a.indexOf('#'));
-                if (a.indexOf('#t_') == 0) {
-                    document.location = '#' + a.substring(3);
-                } else {
-                    document.location = "#t_" + a.substring(1);
-                }
-                
-                if (a.indexOf('thumbs') < 0) {
-                    $(".thumbsonly a").each(function() {
-                        if ($(this).hasClass('thumbsactive')) {
-                            $(this).removeClass('thumbsactive').text("${media_thumbs}");
-                            $(this).parent('.thumbsonly').removeClass("active");
-                        }
-                    });
-                }
-            });
-
+        });
         $(".thumbsonly a").click(function(ev) {
-                $(this).toggleClass('thumbsactive');
-                
-                if ($(this).hasClass('thumbsactive')) {
-                    $(this).text("${media_list}");
-                    $(this).parent('.thumbsonly').addClass("active");
-                    $tabs.tabs('select', tabs_length - 1); // switch to last
-                } else {
-                    $(this).text("${media_thumbs}");
-                    $(this).parent('.thumbsonly').removeClass("active");
-                    $tabs.tabs('select', 0); // switch to first
-                }
-
-                var a = ev.target.href;
-                a = a.substring(a.indexOf('#'));
-                if (a.indexOf('#t_') == 0) {
-                    document.location = '#' + a.substring(3);
-                } else {
-                    document.location = "#t_" + a.substring(1);
-                }
-                
-                return false;
-            });
+            ev.preventDefault();
+            $(this).toggleClass('thumbsactive');
+            
+            if ($(this).hasClass('thumbsactive')) {
+                $(this).text("${media_list}");
+                $(this).parent('.thumbsonly').addClass("active");
+                $tabsEl.tabs({ 'active': tabIds.length - 1 }); // switch to last
+                history.pushState(null, null, "#" + tabIds[tabIds.length - 1]);
+            } else {
+                $(this).text("${media_thumbs}");
+                $(this).parent('.thumbsonly').removeClass("active");
+                $tabsEl.tabs({ 'active': 0 });    // switch to first
+            }
+        });
     }
 }
 
